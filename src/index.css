@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@theme {
+  --color-ink: #140f22;
+  --color-panel: #1e1736;
+  --color-edge: #3a2f5c;
+  --color-gold: #d9b25f;
+  --color-mist: #b9b2cc;
+  --font-display: "Cinzel", serif;
+  --font-body: "Manrope", sans-serif;
+}
+body {
+  margin: 0; color: #efeaff; font-family: var(--font-body);
+  background: radial-gradient(1200px 600px at 50% -10%, #3b2a6b55, transparent), var(--color-ink);
+  min-height: 100vh;
+}
+.hex { clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ring { animation: spin 14s linear infinite; }
+button:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
