@@ -1,29 +1,21 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import Socket from '../components/Socket'
-import { CLASSES, SKILLS, RUNES, RARITY, find } from '../data/game'
+import SkillHex from '../components/SkillHex'
+import {
+  CLASSES, SKILLS, LINKS, RARITY, ELEMENTS, SLOT_COLORS, find, canLink,
+  emptySlot, withSkill, withLinkColor, withLinkRune,
+} from '../data/game'
 import { supabase } from '../lib/supabase'
-
-const empty = () => Array.from({ length: 6 }, () => ({ skill: null, runes: [null, null, null] }))
 
 export default function Builder() {
   const nav = useNavigate()
-  const [b, setB] = useState({ title: '', description: '', cls: CLASSES[0].id, slots: empty() })
-  const [pick, setPick] = useState(null) // { i, kind: 'skill' | 'rune', r }
+  const [b, setB] = useState({ title: '', description: '', cls: CLASSES[0].id, slots: Array.from({ length: 6 }, emptySlot) })
+  const [pick, setPick] = useState(null) // { i, kind: 'skill' } | { i, kind: 'link', k }
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
 
-  const choose = (id) => {
-    const { i, kind, r } = pick
-    setB((s) => ({
-      ...s,
-      slots: s.slots.map((x, j) => j !== i ? x : kind === 'skill'
-        ? { ...x, skill: id }
-        : { ...x, runes: x.runes.map((v, k) => (k === r ? id : v)) }),
-    }))
-    setPick(null)
-  }
+  const update = (i, fn) => setB((s) => ({ ...s, slots: s.slots.map((x, j) => (j === i ? fn(x) : x)) }))
 
   const save = async () => {
     if (!b.title.trim()) return setErr('Wpisz nazwę buildu.')
@@ -35,7 +27,9 @@ export default function Builder() {
     nav('/build/' + data.id)
   }
 
-  const list = pick?.kind === 'rune' ? RUNES : SKILLS
+  const slot = pick ? b.slots[pick.i] : null
+  const skill = slot ? find(SKILLS, slot.skill) : null
+  const linkColor = pick?.kind === 'link' ? slot.links[pick.k].c : null
 
   return (
     <section>
@@ -53,21 +47,22 @@ export default function Builder() {
           </button>
         ))}
       </div>
-      <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-3">
-        {b.slots.map((s, i) => (
-          <div key={i} className="flex flex-col items-center gap-3 rounded-xl border border-edge bg-panel p-5">
-            <Socket size={92} item={find(SKILLS, s.skill)} label={`Skill, slot ${i + 1}`}
-              onClick={() => setPick({ i, kind: 'skill' })} />
-            <p className="text-sm text-mist">{find(SKILLS, s.skill)?.name || 'Wybierz skill'}</p>
-            <div className="flex gap-2">
-              {s.runes.map((r, k) => (
-                <Socket key={k} round size={34} item={find(RUNES, r)} label={`Runa ${k + 1}, slot ${i + 1}`}
-                  onClick={() => setPick({ i, kind: 'rune', r: k })} />
-              ))}
+
+      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {b.slots.map((s, i) => {
+          const sk = find(SKILLS, s.skill)
+          return (
+            <div key={i} className="flex flex-col items-center gap-2 rounded-xl border border-edge bg-panel p-4">
+              <SkillHex slot={s} slotNo={i + 1} size={230}
+                onSkill={() => setPick({ i, kind: 'skill' })}
+                onLink={(k) => setPick({ i, kind: 'link', k })} />
+              <p className="font-display text-lg">{sk?.name || 'Wybierz skill'}</p>
+              {!sk && <p className="text-xs text-mist">Sloty linków odblokują się po wyborze skilla</p>}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
+
       <textarea value={b.description} onChange={(e) => setB({ ...b, description: e.target.value })}
         maxLength={2000} rows={4} placeholder="Opis: jak grać, na jakie staty celować…"
         className="mt-8 w-full rounded-xl border border-edge bg-panel p-4 outline-none focus:border-gold" />
@@ -82,18 +77,59 @@ export default function Builder() {
           <motion.div className="fixed inset-0 z-10 grid place-items-center bg-black/70 p-4"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setPick(null)}>
             <motion.div onClick={(e) => e.stopPropagation()} initial={{ y: 30, scale: 0.95 }} animate={{ y: 0, scale: 1 }}
-              exit={{ y: 30, opacity: 0 }} className="w-full max-w-md rounded-2xl border border-edge bg-panel p-5">
-              <h2 className="mb-3 font-display text-xl">{pick.kind === 'rune' ? 'Wybierz runę' : 'Wybierz skill'}</h2>
-              <div className="grid grid-cols-2 gap-2">
-                {list.map((it) => (
-                  <button key={it.id} onClick={() => choose(it.id)}
-                    className="rounded-lg border px-3 py-2 text-left hover:bg-white/5"
-                    style={{ borderColor: RARITY[it.rarity] + '88', color: RARITY[it.rarity] }}>{it.name}</button>
-                ))}
-                <button onClick={() => choose(null)} className="col-span-2 rounded-lg border border-edge px-3 py-2 text-mist">
-                  Wyczyść slot
-                </button>
-              </div>
+              exit={{ y: 30, opacity: 0 }} className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-edge bg-panel p-5">
+              {pick.kind === 'skill' ? (
+                <>
+                  <h2 className="mb-3 font-display text-xl">Wybierz skill</h2>
+                  <div className="grid grid-cols-2 gap-2">
+                    {SKILLS.map((it) => (
+                      <button key={it.id}
+                        onClick={() => { update(pick.i, (x) => withSkill(x, it.id)); setPick(null) }}
+                        className="rounded-lg border px-3 py-2 text-left hover:bg-white/5"
+                        style={{ borderColor: RARITY[it.rarity] + '88', color: RARITY[it.rarity] }}>
+                        {it.name}
+                        <span className="mt-0.5 block text-xs" style={{ color: ELEMENTS[it.color].hex }}>
+                          {ELEMENTS[it.color].name}
+                        </span>
+                      </button>
+                    ))}
+                    <button onClick={() => { update(pick.i, () => emptySlot()); setPick(null) }}
+                      className="col-span-2 rounded-lg border border-edge px-3 py-2 text-mist">Wyczyść slot</button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h2 className="font-display text-xl">Link {pick.k + 1}: {skill?.name}</h2>
+                  <p className="mb-2 mt-3 text-sm text-mist">Kolor slotu</p>
+                  <div className="flex gap-2">
+                    {SLOT_COLORS.map((c) => (
+                      <button key={c} onClick={() => update(pick.i, (x) => withLinkColor(x, pick.k, c))}
+                        aria-pressed={linkColor === c} className="rounded-full px-3 py-1 text-sm"
+                        style={{
+                          border: `1px solid ${ELEMENTS[c].hex}`, color: ELEMENTS[c].hex,
+                          background: linkColor === c ? ELEMENTS[c].hex + '33' : 'transparent',
+                        }}>{ELEMENTS[c].name}</button>
+                    ))}
+                  </div>
+                  <p className="mb-2 mt-4 text-sm text-mist">Link Runy</p>
+                  <div className="grid gap-2">
+                    {LINKS.map((it) => {
+                      const r = canLink(skill, linkColor, it)
+                      return (
+                        <button key={it.id} disabled={!r.ok}
+                          onClick={() => { update(pick.i, (x) => withLinkRune(x, pick.k, it.id)); setPick(null) }}
+                          className="rounded-lg border px-3 py-2 text-left enabled:hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
+                          style={{ borderColor: ELEMENTS[it.color].hex + '88', color: RARITY[it.rarity] }}>
+                          {it.name}
+                          {!r.ok && <span className="mt-0.5 block text-xs text-mist">{r.reason}</span>}
+                        </button>
+                      )
+                    })}
+                    <button onClick={() => { update(pick.i, (x) => withLinkRune(x, pick.k, null)); setPick(null) }}
+                      className="rounded-lg border border-edge px-3 py-2 text-mist">Wyczyść slot</button>
+                  </div>
+                </>
+              )}
             </motion.div>
           </motion.div>
         )}

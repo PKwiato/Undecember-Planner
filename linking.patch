@@ -1,0 +1,502 @@
+diff --git a/public/assets/README.md b/public/assets/README.md
+new file mode 100644
+index 0000000..4a2e8cd
+--- /dev/null
++++ b/public/assets/README.md
+@@ -0,0 +1,10 @@
++# Ikony
++
++Nazwa pliku = `id` z `src/data/game.js`, format PNG (najlepiej kwadrat, przezroczyste tło).
++
++- `skills/<id>.png`  np. `skills/s1.png`
++- `links/<id>.png`   np. `links/multishot.png`
++
++Brak pliku nie psuje strony: socket pokazuje wtedy literę zastępczą.
++Pamiętaj, że grafiki z gry należą do wydawcy. Trzymaj je w tym jednym folderze,
++żeby dało się je łatwo podmienić albo usunąć.
+diff --git a/public/assets/links/.gitkeep b/public/assets/links/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/public/assets/skills/.gitkeep b/public/assets/skills/.gitkeep
+new file mode 100644
+index 0000000..e69de29
+diff --git a/src/components/BuildSheet.jsx b/src/components/BuildSheet.jsx
+index dda7b7d..2528f6b 100644
+--- a/src/components/BuildSheet.jsx
++++ b/src/components/BuildSheet.jsx
+@@ -1,31 +1,44 @@
+ import { motion } from 'motion/react'
+-import Socket from './Socket'
+-import { CLASSES, SKILLS, RUNES, find } from '../data/game'
++import SkillHex from './SkillHex'
++import { CLASSES, SKILLS, LINKS, ELEMENTS, find, normalizeSlot } from '../data/game'
+ 
+ // Read-only build. The slots light up one after another when the page opens.
+ export default function BuildSheet({ build }) {
+   const cls = find(CLASSES, build.class)
++  const slots = (build.data?.slots || []).map(normalizeSlot)
+   return (
+     <section>
+       <h1 className="font-display text-4xl font-bold">{build.title}</h1>
+       <p className="mt-1 font-display text-lg" style={{ color: cls?.color }}>{cls?.name}</p>
+       {build.description && <p className="mt-4 max-w-prose whitespace-pre-line text-mist">{build.description}</p>}
+-      <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-3">
+-        {build.data.slots.map((s, i) => (
+-          <motion.div
+-            key={i}
+-            initial={{ opacity: 0, y: 16 }}
+-            animate={{ opacity: 1, y: 0 }}
+-            transition={{ delay: i * 0.12, duration: 0.5 }}
+-            className="flex flex-col items-center gap-3 rounded-xl border border-edge bg-panel p-5"
+-          >
+-            <Socket item={find(SKILLS, s.skill)} size={92} />
+-            <p className="text-sm text-mist">{find(SKILLS, s.skill)?.name || 'Pusty slot'}</p>
+-            <div className="flex gap-2">
+-              {s.runes.map((r, k) => <Socket key={k} round size={34} item={find(RUNES, r)} />)}
+-            </div>
+-          </motion.div>
+-        ))}
++      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
++        {slots.map((s, i) => {
++          const skill = find(SKILLS, s.skill)
++          const linked = s.links.filter((l) => find(LINKS, l.r))
++          return (
++            <motion.div
++              key={i}
++              initial={{ opacity: 0, y: 16 }}
++              animate={{ opacity: 1, y: 0 }}
++              transition={{ delay: i * 0.12, duration: 0.5 }}
++              className="flex flex-col items-center gap-2 rounded-xl border border-edge bg-panel p-4"
++            >
++              <SkillHex slot={s} slotNo={i + 1} size={230} />
++              <p className="font-display text-lg">{skill?.name || 'Pusty slot'}</p>
++              {skill && <p className="text-xs text-mist">Linki: {linked.length}/{s.links.length}</p>}
++              <ul className="flex flex-wrap justify-center gap-1.5">
++                {linked.map((l, k) => {
++                  const link = find(LINKS, l.r)
++                  const col = ELEMENTS[l.c].hex
++                  return (
++                    <li key={k} className="rounded-full border px-2.5 py-0.5 text-xs"
++                      style={{ borderColor: col + '99', color: col }}>{link.name}</li>
++                  )
++                })}
++              </ul>
++            </motion.div>
++          )
++        })}
+       </div>
+     </section>
+   )
+diff --git a/src/components/SkillHex.jsx b/src/components/SkillHex.jsx
+new file mode 100644
+index 0000000..2baa11b
+--- /dev/null
++++ b/src/components/SkillHex.jsx
+@@ -0,0 +1,53 @@
++import { motion } from 'motion/react'
++import Socket from './Socket'
++import { ELEMENTS, SKILLS, LINKS, LINK_SLOTS, find } from '../data/game'
++
++// Skill w środku + 6 slotów linków na wierzchołkach heksagonu (jak w Rune Cast).
++// Bez onSkill/onLink to widok tylko do odczytu.
++export default function SkillHex({ slot, size = 240, onSkill, onLink, slotNo = 1 }) {
++  const skill = find(SKILLS, slot.skill)
++  const c = size / 2
++  const R = size * 0.36
++  const pts = Array.from({ length: LINK_SLOTS }, (_, k) => {
++    const a = ((-90 + 60 * k) * Math.PI) / 180
++    return { x: c + R * Math.cos(a), y: c + R * Math.sin(a) }
++  })
++  const skillSize = size * 0.36
++  const linkSize = size * 0.19
++
++  return (
++    <div className="relative mx-auto" style={{ width: size, height: size }}>
++      <svg className="absolute inset-0" width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none" aria-hidden="true">
++        <polygon points={pts.map((p) => `${p.x},${p.y}`).join(' ')} stroke="#3a2f5c" strokeWidth="1" strokeDasharray="2 5" />
++        {pts.map((p, k) => {
++          const l = slot.links[k]
++          const col = ELEMENTS[l.c].hex
++          return find(LINKS, l.r) ? (
++            <motion.line key={`${k}-${l.r}`} x1={c} y1={c} x2={p.x} y2={p.y} stroke={col} strokeWidth="3"
++              strokeLinecap="round" style={{ filter: `drop-shadow(0 0 4px ${col})` }}
++              initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.5 }} />
++          ) : (
++            <line key={`${k}-empty`} x1={c} y1={c} x2={p.x} y2={p.y} stroke={col} strokeOpacity="0.25"
++              strokeWidth="1" strokeDasharray="3 5" />
++          )
++        })}
++      </svg>
++
++      <div className="absolute" style={{ left: c - skillSize / 2, top: c - skillSize / 2 }}>
++        <Socket size={skillSize} item={skill} kind="skills" label={`Skill, slot ${slotNo}`} onClick={onSkill} />
++      </div>
++
++      {pts.map((p, k) => {
++        const l = slot.links[k]
++        const link = find(LINKS, l.r)
++        return (
++          <div key={k} className="absolute" style={{ left: p.x - linkSize / 2, top: p.y - linkSize / 2 }}>
++            <Socket round size={linkSize} item={link} kind="links" color={ELEMENTS[l.c].hex}
++              label={`Link ${k + 1}, slot ${slotNo}: ${link?.name || 'pusty'} (${ELEMENTS[l.c].name})`}
++              onClick={onLink ? () => onLink(k) : undefined} disabled={!skill} />
++          </div>
++        )
++      })}
++    </div>
++  )
++}
+diff --git a/src/components/Socket.jsx b/src/components/Socket.jsx
+index 5574569..ef87a06 100644
+--- a/src/components/Socket.jsx
++++ b/src/components/Socket.jsx
+@@ -1,23 +1,29 @@
++import { useEffect, useState } from 'react'
+ import { motion } from 'motion/react'
+-import { RARITY } from '../data/game'
++import { RARITY, iconUrl } from '../data/game'
+ 
+-// Hex socket. When filled, a slow runic ring turns around it.
+-export default function Socket({ item, size = 76, round = false, onClick, label }) {
+-  const color = item ? RARITY[item.rarity] : '#3a2f5c'
+-  const shape = round ? 'rounded-full' : 'hex'
++// Socket. `kind` ('skills' | 'links') włącza ikonę z public/assets/<kind>/<id>.png,
++// bez pliku pokazuje literę. `color` nadpisuje kolor ramki (np. kolor slotu linku).
++// Hex: gdy zajęty, kręci się wokół niego runiczny pierścień.
++export default function Socket({ item, size = 76, round = false, onClick, label, color, kind, disabled }) {
++  const col = color || (item ? RARITY[item.rarity] : '#3a2f5c')
++  const [broken, setBroken] = useState(false)
++  useEffect(() => setBroken(false), [item?.id])
+   const Tag = onClick ? motion.button : motion.div
++  const interactive = onClick && !disabled
+   return (
+     <Tag
+-      onClick={onClick}
++      onClick={interactive ? onClick : undefined}
+       aria-label={label}
+-      whileHover={onClick ? { scale: 1.06 } : undefined}
+-      whileTap={onClick ? { scale: 0.94 } : undefined}
+-      className="relative grid place-items-center"
++      aria-disabled={onClick && disabled ? true : undefined}
++      whileHover={interactive ? { scale: 1.08 } : undefined}
++      whileTap={interactive ? { scale: 0.92 } : undefined}
++      className={`relative grid place-items-center ${onClick && disabled ? 'cursor-not-allowed opacity-50' : ''}`}
+       style={{ width: size, height: size }}
+     >
+       {item && !round && (
+-        <svg className="ring absolute inset-0" viewBox="0 0 100 100" fill="none">
+-          <circle cx="50" cy="50" r="48" stroke={color} strokeWidth="1.5" strokeDasharray="3 7" />
++        <svg className="ring absolute inset-0" viewBox="0 0 100 100" fill="none" aria-hidden="true">
++          <circle cx="50" cy="50" r="48" stroke={col} strokeWidth="1.5" strokeDasharray="3 7" />
+         </svg>
+       )}
+       <motion.div
+@@ -25,17 +31,22 @@ export default function Socket({ item, size = 76, round = false, onClick, label
+         initial={{ scale: 0.6, opacity: 0 }}
+         animate={{ scale: 1, opacity: 1 }}
+         transition={{ type: 'spring', stiffness: 380, damping: 20 }}
+-        className={`grid place-items-center ${shape}`}
++        className={`grid place-items-center overflow-hidden ${round ? 'rounded-full' : 'hex'}`}
+         style={{
+           width: size * 0.82, height: size * 0.82,
+-          background: item ? `linear-gradient(145deg, ${color}55, #1e1736)` : '#1e1736',
+-          border: `2px solid ${color}`,
+-          boxShadow: item ? `0 0 18px ${color}66` : 'none',
++          background: item ? `linear-gradient(145deg, ${col}55, #1e1736)` : '#1e1736',
++          border: `2px solid ${item ? col : col + '88'}`,
++          boxShadow: item ? `0 0 ${round ? 10 : 18}px ${col}88` : 'none',
+         }}
+       >
+-        <span className="font-display text-lg" style={{ color: item ? color : '#6d6390' }}>
+-          {item ? item.name.slice(-1) : '+'}
+-        </span>
++        {item && kind && !broken ? (
++          <img src={iconUrl(kind, item.id)} alt="" draggable={false} onError={() => setBroken(true)}
++            className="h-full w-full object-contain p-[10%]" />
++        ) : (
++          <span className="font-display" style={{ color: item ? col : '#6d6390', fontSize: size * 0.28 }}>
++            {item ? item.name[0] : onClick ? '+' : ''}
++          </span>
++        )}
+       </motion.div>
+     </Tag>
+   )
+diff --git a/src/data/game.js b/src/data/game.js
+index 20e5591..e49e39b 100644
+--- a/src/data/game.js
++++ b/src/data/game.js
+@@ -1,4 +1,7 @@
+ // PRZYKŁADOWE DANE. Zastąp własnymi po sprawdzeniu aktualnego patcha gry.
++// Zasady linkowania (jak w grze): Link Rune wchodzi do slotu Skill Runa, jeśli
++// 1) kolor slotu = kolor Link Runa, oraz 2) skill ma wszystkie tagi z `requires`.
++
+ export const CLASSES = [
+   { id: 'warrior', name: 'Wojownik', color: '#e0603a' },
+   { id: 'wizard', name: 'Czarodziej', color: '#6b8cff' },
+@@ -6,18 +9,94 @@ export const CLASSES = [
+   { id: 'archer', name: 'Łucznik', color: '#4fc38a' },
+ ]
+ export const RARITY = { normal: '#9aa0ae', magic: '#5b8def', rare: '#e8c25a', legend: '#ff7a3d' }
++
++// Kolory slotów: czerwony = Siła, niebieski = Inteligencja, zielony = Zręczność
++export const ELEMENTS = {
++  red: { name: 'Siła', hex: '#e0603a' },
++  blue: { name: 'Inteligencja', hex: '#5b8def' },
++  green: { name: 'Zręczność', hex: '#4fc38a' },
++}
++export const SLOT_COLORS = ['red', 'blue', 'green']
++export const LINK_SLOTS = 6
++
++export const TAGS = {
++  spell: 'Czar', projectile: 'Pocisk', fire: 'Ogień',
++  melee: 'Wręcz', physical: 'Fizyczny', summon: 'Przywołanie',
++}
++
++// id = nazwa pliku ikony: public/assets/skills/<id>.png
+ export const SKILLS = [
+-  { id: 's1', name: 'Skill A', rarity: 'rare' },
+-  { id: 's2', name: 'Skill B', rarity: 'magic' },
+-  { id: 's3', name: 'Skill C', rarity: 'legend' },
+-  { id: 's4', name: 'Skill D', rarity: 'normal' },
+-  { id: 's5', name: 'Skill E', rarity: 'rare' },
+-  { id: 's6', name: 'Skill F', rarity: 'magic' },
++  { id: 's1', name: 'Fire Ball', rarity: 'rare', color: 'blue', tags: ['spell', 'projectile', 'fire'] },
++  { id: 's2', name: 'Whirlwind', rarity: 'magic', color: 'red', tags: ['melee', 'physical'] },
++  { id: 's3', name: 'Skill C', rarity: 'legend', color: 'green', tags: ['projectile', 'physical'] },
++  { id: 's4', name: 'Skill D', rarity: 'normal', color: 'red', tags: ['melee', 'fire'] },
++  { id: 's5', name: 'Skill E', rarity: 'rare', color: 'blue', tags: ['spell', 'summon'] },
++  { id: 's6', name: 'Skill F', rarity: 'magic', color: 'green', tags: ['melee', 'physical'] },
+ ]
+-export const RUNES = [
+-  { id: 'r1', name: 'Rune 1', rarity: 'magic' },
+-  { id: 'r2', name: 'Rune 2', rarity: 'rare' },
+-  { id: 'r3', name: 'Rune 3', rarity: 'legend' },
+-  { id: 'r4', name: 'Rune 4', rarity: 'normal' },
++
++// id = nazwa pliku ikony: public/assets/links/<id>.png
++export const LINKS = [
++  { id: 'multishot', name: 'Multishot', rarity: 'rare', color: 'green', requires: ['projectile'] },
++  { id: 'piercing', name: 'Piercing', rarity: 'magic', color: 'green', requires: ['projectile'] },
++  { id: 'chain', name: 'Chain', rarity: 'magic', color: 'blue', requires: ['projectile'] },
++  { id: 'time-accel', name: 'Time Acceleration', rarity: 'rare', color: 'blue', requires: [] },
++  { id: 'finishing-blow', name: 'Finishing Blow', rarity: 'legend', color: 'red', requires: ['summon'] },
++  { id: 'fire-amp', name: 'Fire Amplify', rarity: 'magic', color: 'red', requires: ['fire'] },
++  { id: 'phys-amp', name: 'Physical Amplify', rarity: 'normal', color: 'red', requires: ['physical'] },
++  { id: 'spell-amp', name: 'Spell Amplify', rarity: 'magic', color: 'blue', requires: ['spell'] },
+ ]
++
+ export const find = (list, id) => list.find((x) => x.id === id)
++
++export const iconUrl = (kind, id) => `${import.meta.env.BASE_URL}assets/${kind}/${id}.png`
++
++// Czy Link Rune może wejść do slotu o danym kolorze w danym skillu?
++export function canLink(skill, slotColor, link) {
++  if (!skill) return { ok: false, reason: 'Najpierw wybierz skill' }
++  if (link.color !== slotColor) {
++    return { ok: false, reason: `Kolor runa: ${ELEMENTS[link.color].name}, slot: ${ELEMENTS[slotColor].name}` }
++  }
++  const missing = (link.requires || []).filter((t) => !skill.tags.includes(t))
++  if (missing.length) return { ok: false, reason: 'Skill musi mieć tag: ' + missing.map((t) => TAGS[t]).join(', ') }
++  return { ok: true }
++}
++
++// Slot buildu: { skill, links: [{ c: kolor slotu, r: id link runa | null }] x6 }
++export const emptySlot = () => ({
++  skill: null,
++  links: Array.from({ length: LINK_SLOTS }, () => ({ c: 'red', r: null })),
++})
++
++// Stare buildy (z polem `runes`) i niekompletne dane trafiają tu i dostają poprawny kształt.
++export const normalizeSlot = (s) => ({
++  skill: s?.skill ?? null,
++  links: Array.from({ length: LINK_SLOTS }, (_, k) => ({
++    c: ELEMENTS[s?.links?.[k]?.c] ? s.links[k].c : 'red',
++    r: s?.links?.[k]?.r ?? null,
++  })),
++})
++
++// Zmiana skilla: puste sloty biorą kolor skilla, runy które przestały pasować wypadają.
++export function withSkill(slot, id) {
++  const skill = find(SKILLS, id)
++  return {
++    skill: id,
++    links: slot.links.map((l) => {
++      const c = l.r || !skill ? l.c : skill.color
++      const link = find(LINKS, l.r)
++      return { c, r: link && skill && canLink(skill, c, link).ok ? l.r : null }
++    }),
++  }
++}
++export function withLinkColor(slot, k, c) {
++  const skill = find(SKILLS, slot.skill)
++  const link = find(LINKS, slot.links[k].r)
++  return {
++    ...slot,
++    links: slot.links.map((l, j) => j !== k ? l : { c, r: link && canLink(skill, c, link).ok ? l.r : null }),
++  }
++}
++export const withLinkRune = (slot, k, r) => ({
++  ...slot,
++  links: slot.links.map((l, j) => (j === k ? { ...l, r } : l)),
++})
+diff --git a/src/pages/Builder.jsx b/src/pages/Builder.jsx
+index 272ebeb..add03d4 100644
+--- a/src/pages/Builder.jsx
++++ b/src/pages/Builder.jsx
+@@ -1,29 +1,21 @@
+ import { useState } from 'react'
+ import { useNavigate } from 'react-router-dom'
+ import { motion, AnimatePresence } from 'motion/react'
+-import Socket from '../components/Socket'
+-import { CLASSES, SKILLS, RUNES, RARITY, find } from '../data/game'
++import SkillHex from '../components/SkillHex'
++import {
++  CLASSES, SKILLS, LINKS, RARITY, ELEMENTS, SLOT_COLORS, find, canLink,
++  emptySlot, withSkill, withLinkColor, withLinkRune,
++} from '../data/game'
+ import { supabase } from '../lib/supabase'
+ 
+-const empty = () => Array.from({ length: 6 }, () => ({ skill: null, runes: [null, null, null] }))
+-
+ export default function Builder() {
+   const nav = useNavigate()
+-  const [b, setB] = useState({ title: '', description: '', cls: CLASSES[0].id, slots: empty() })
+-  const [pick, setPick] = useState(null) // { i, kind: 'skill' | 'rune', r }
++  const [b, setB] = useState({ title: '', description: '', cls: CLASSES[0].id, slots: Array.from({ length: 6 }, emptySlot) })
++  const [pick, setPick] = useState(null) // { i, kind: 'skill' } | { i, kind: 'link', k }
+   const [busy, setBusy] = useState(false)
+   const [err, setErr] = useState('')
+ 
+-  const choose = (id) => {
+-    const { i, kind, r } = pick
+-    setB((s) => ({
+-      ...s,
+-      slots: s.slots.map((x, j) => j !== i ? x : kind === 'skill'
+-        ? { ...x, skill: id }
+-        : { ...x, runes: x.runes.map((v, k) => (k === r ? id : v)) }),
+-    }))
+-    setPick(null)
+-  }
++  const update = (i, fn) => setB((s) => ({ ...s, slots: s.slots.map((x, j) => (j === i ? fn(x) : x)) }))
+ 
+   const save = async () => {
+     if (!b.title.trim()) return setErr('Wpisz nazwę buildu.')
+@@ -35,7 +27,9 @@ export default function Builder() {
+     nav('/build/' + data.id)
+   }
+ 
+-  const list = pick?.kind === 'rune' ? RUNES : SKILLS
++  const slot = pick ? b.slots[pick.i] : null
++  const skill = slot ? find(SKILLS, slot.skill) : null
++  const linkColor = pick?.kind === 'link' ? slot.links[pick.k].c : null
+ 
+   return (
+     <section>
+@@ -53,21 +47,22 @@ export default function Builder() {
+           </button>
+         ))}
+       </div>
+-      <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-3">
+-        {b.slots.map((s, i) => (
+-          <div key={i} className="flex flex-col items-center gap-3 rounded-xl border border-edge bg-panel p-5">
+-            <Socket size={92} item={find(SKILLS, s.skill)} label={`Skill, slot ${i + 1}`}
+-              onClick={() => setPick({ i, kind: 'skill' })} />
+-            <p className="text-sm text-mist">{find(SKILLS, s.skill)?.name || 'Wybierz skill'}</p>
+-            <div className="flex gap-2">
+-              {s.runes.map((r, k) => (
+-                <Socket key={k} round size={34} item={find(RUNES, r)} label={`Runa ${k + 1}, slot ${i + 1}`}
+-                  onClick={() => setPick({ i, kind: 'rune', r: k })} />
+-              ))}
++
++      <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
++        {b.slots.map((s, i) => {
++          const sk = find(SKILLS, s.skill)
++          return (
++            <div key={i} className="flex flex-col items-center gap-2 rounded-xl border border-edge bg-panel p-4">
++              <SkillHex slot={s} slotNo={i + 1} size={230}
++                onSkill={() => setPick({ i, kind: 'skill' })}
++                onLink={(k) => setPick({ i, kind: 'link', k })} />
++              <p className="font-display text-lg">{sk?.name || 'Wybierz skill'}</p>
++              {!sk && <p className="text-xs text-mist">Sloty linków odblokują się po wyborze skilla</p>}
+             </div>
+-          </div>
+-        ))}
++          )
++        })}
+       </div>
++
+       <textarea value={b.description} onChange={(e) => setB({ ...b, description: e.target.value })}
+         maxLength={2000} rows={4} placeholder="Opis: jak grać, na jakie staty celować…"
+         className="mt-8 w-full rounded-xl border border-edge bg-panel p-4 outline-none focus:border-gold" />
+@@ -82,18 +77,59 @@ export default function Builder() {
+           <motion.div className="fixed inset-0 z-10 grid place-items-center bg-black/70 p-4"
+             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setPick(null)}>
+             <motion.div onClick={(e) => e.stopPropagation()} initial={{ y: 30, scale: 0.95 }} animate={{ y: 0, scale: 1 }}
+-              exit={{ y: 30, opacity: 0 }} className="w-full max-w-md rounded-2xl border border-edge bg-panel p-5">
+-              <h2 className="mb-3 font-display text-xl">{pick.kind === 'rune' ? 'Wybierz runę' : 'Wybierz skill'}</h2>
+-              <div className="grid grid-cols-2 gap-2">
+-                {list.map((it) => (
+-                  <button key={it.id} onClick={() => choose(it.id)}
+-                    className="rounded-lg border px-3 py-2 text-left hover:bg-white/5"
+-                    style={{ borderColor: RARITY[it.rarity] + '88', color: RARITY[it.rarity] }}>{it.name}</button>
+-                ))}
+-                <button onClick={() => choose(null)} className="col-span-2 rounded-lg border border-edge px-3 py-2 text-mist">
+-                  Wyczyść slot
+-                </button>
+-              </div>
++              exit={{ y: 30, opacity: 0 }} className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-2xl border border-edge bg-panel p-5">
++              {pick.kind === 'skill' ? (
++                <>
++                  <h2 className="mb-3 font-display text-xl">Wybierz skill</h2>
++                  <div className="grid grid-cols-2 gap-2">
++                    {SKILLS.map((it) => (
++                      <button key={it.id}
++                        onClick={() => { update(pick.i, (x) => withSkill(x, it.id)); setPick(null) }}
++                        className="rounded-lg border px-3 py-2 text-left hover:bg-white/5"
++                        style={{ borderColor: RARITY[it.rarity] + '88', color: RARITY[it.rarity] }}>
++                        {it.name}
++                        <span className="mt-0.5 block text-xs" style={{ color: ELEMENTS[it.color].hex }}>
++                          {ELEMENTS[it.color].name}
++                        </span>
++                      </button>
++                    ))}
++                    <button onClick={() => { update(pick.i, () => emptySlot()); setPick(null) }}
++                      className="col-span-2 rounded-lg border border-edge px-3 py-2 text-mist">Wyczyść slot</button>
++                  </div>
++                </>
++              ) : (
++                <>
++                  <h2 className="font-display text-xl">Link {pick.k + 1}: {skill?.name}</h2>
++                  <p className="mb-2 mt-3 text-sm text-mist">Kolor slotu</p>
++                  <div className="flex gap-2">
++                    {SLOT_COLORS.map((c) => (
++                      <button key={c} onClick={() => update(pick.i, (x) => withLinkColor(x, pick.k, c))}
++                        aria-pressed={linkColor === c} className="rounded-full px-3 py-1 text-sm"
++                        style={{
++                          border: `1px solid ${ELEMENTS[c].hex}`, color: ELEMENTS[c].hex,
++                          background: linkColor === c ? ELEMENTS[c].hex + '33' : 'transparent',
++                        }}>{ELEMENTS[c].name}</button>
++                    ))}
++                  </div>
++                  <p className="mb-2 mt-4 text-sm text-mist">Link Runy</p>
++                  <div className="grid gap-2">
++                    {LINKS.map((it) => {
++                      const r = canLink(skill, linkColor, it)
++                      return (
++                        <button key={it.id} disabled={!r.ok}
++                          onClick={() => { update(pick.i, (x) => withLinkRune(x, pick.k, it.id)); setPick(null) }}
++                          className="rounded-lg border px-3 py-2 text-left enabled:hover:bg-white/5 disabled:cursor-not-allowed disabled:opacity-40"
++                          style={{ borderColor: ELEMENTS[it.color].hex + '88', color: RARITY[it.rarity] }}>
++                          {it.name}
++                          {!r.ok && <span className="mt-0.5 block text-xs text-mist">{r.reason}</span>}
++                        </button>
++                      )
++                    })}
++                    <button onClick={() => { update(pick.i, (x) => withLinkRune(x, pick.k, null)); setPick(null) }}
++                      className="rounded-lg border border-edge px-3 py-2 text-mist">Wyczyść slot</button>
++                  </div>
++                </>
++              )}
+             </motion.div>
+           </motion.div>
+         )}
