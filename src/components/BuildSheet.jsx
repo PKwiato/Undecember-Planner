@@ -116,7 +116,9 @@ export default function BuildSheet({ build }) {
                 cell={activeCell}
                 onClose={() => setSelectedCell(null)}
                 connectedLinks={activeSummary?.connectedLinks || []}
+                blockedLinks={activeSummary?.blockedLinks || []}
                 linkedSkills={activeLinkStatus?.linkedSkills || []}
+                blockedSkills={activeLinkStatus?.blockedSkills || []}
               />
             )}
           </AnimatePresence>

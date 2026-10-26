@@ -9,7 +9,9 @@ export default function RuneInspector({
   onUpdateSlots,
   onRemoveRune,
   connectedLinks = [],
+  blockedLinks = [],
   linkedSkills = [],
+  blockedSkills = [],
   onRotateSlots,
   onAutoAlignSlots,
   onMaxWhiteSlots,
@@ -227,6 +229,29 @@ export default function RuneInspector({
               </div>
             )}
           </div>
+
+          {/* Blocked / Incompatible Adjacent Links */}
+          {blockedLinks.length > 0 && (
+            <div className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-2.5">
+              <p className="text-[11px] font-semibold text-red-300">
+                Sąsiadujące linki, które nie mogły się połączyć:
+              </p>
+              <div className="mt-1.5 space-y-1">
+                {blockedLinks.map((bl, i) => (
+                  <div key={i} className="flex items-start gap-1.5 text-xs text-mist">
+                    <span
+                      className="mt-1 h-2 w-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: ELEMENTS[bl.link.color]?.hex || '#d9b25f' }}
+                    />
+                    <div>
+                      <span className="font-semibold text-white">{bl.link.name}</span>
+                      <span className="text-red-400"> — {bl.reason}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -252,6 +277,29 @@ export default function RuneInspector({
                   <span className="font-bold text-gold">{ls.skill.name}</span>
                 </span>
               ))}
+            </div>
+          )}
+
+          {/* Blocked / Incompatible Adjacent Skills */}
+          {blockedSkills.length > 0 && (
+            <div className="mt-3 rounded-xl border border-red-500/30 bg-red-500/10 p-2.5">
+              <p className="text-[11px] font-semibold text-red-300">
+                Sąsiadujące skille, z którymi nie można się połączyć:
+              </p>
+              <div className="mt-1.5 space-y-1">
+                {blockedSkills.map((bs, i) => (
+                  <div key={i} className="flex items-start gap-1.5 text-xs text-mist">
+                    <span
+                      className="mt-1 h-2 w-2 shrink-0 rounded-full"
+                      style={{ backgroundColor: ELEMENTS[bs.skill.color]?.hex || '#d9b25f' }}
+                    />
+                    <div>
+                      <span className="font-semibold text-gold">{bs.skill.name}</span>
+                      <span className="text-red-400"> — {bs.reason}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
         </div>
