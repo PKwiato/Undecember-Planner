@@ -1,20 +1,88 @@
 @import "tailwindcss";
 @theme {
-  --color-ink: #140f22;
-  --color-panel: #1e1736;
-  --color-edge: #3a2f5c;
+  --color-ink: #0d0a17;
+  --color-panel: #171228;
+  --color-panel-card: #1f1838;
+  --color-edge: #342854;
   --color-gold: #d9b25f;
-  --color-mist: #b9b2cc;
+  --color-gold-hover: #edd18a;
+  --color-mist: #b3a9cc;
   --font-display: "Cinzel", serif;
   --font-body: "Manrope", sans-serif;
 }
 body {
-  margin: 0; color: #efeaff; font-family: var(--font-body);
-  background: radial-gradient(1200px 600px at 50% -10%, #3b2a6b55, transparent), var(--color-ink);
+  margin: 0;
+  color: #efeaff;
+  font-family: var(--font-body);
+  background-color: var(--color-ink);
+  background-image: linear-gradient(to bottom, rgba(13, 10, 23, 0.88), rgba(13, 10, 23, 0.96)),
+    url('https://undecember.thein.ru/image/common/page_bg/bg_website.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-attachment: fixed;
   min-height: 100vh;
 }
-.hex { clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%); }
-@keyframes spin { to { transform: rotate(360deg); } }
-.ring { animation: spin 14s linear infinite; }
-button:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .ring { animation: none; } }
+.hex {
+  clip-path: polygon(50% 0, 95% 25%, 95% 75%, 50% 100%, 5% 75%, 5% 25%);
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.ring {
+  animation: spin 16s linear infinite;
+}
+
+@keyframes beamPulse {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-beam-flow {
+  animation: beamPulse 1.2s linear infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 14px currentColor);
+  }
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+button:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ring {
+    animation: none;
+  }
+}
+
+/* Custom scrollbars for modal listings */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #140f24;
+}
+::-webkit-scrollbar-thumb {
+  background: #3a2e5e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #534285;
+}

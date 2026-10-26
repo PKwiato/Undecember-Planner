@@ -1,0 +1,722 @@
+[
+  {
+    "id": "RuneGrowthMagicRunestone",
+    "slug": "RuneGrowthMagicRunestone",
+    "name": "Rune Growth Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddEquipRuneLevel.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/RuneGrowthMagicRunestone/"
+  },
+  {
+    "id": "ResourceCostMagicRunestone",
+    "slug": "ResourceCostMagicRunestone",
+    "name": "Resource Cost Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddResource.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/ResourceCostMagicRunestone/"
+  },
+  {
+    "id": "AreaOfEffectMagicRunestone",
+    "slug": "AreaOfEffectMagicRunestone",
+    "name": "Area of Effect Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAOE.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/AreaOfEffectMagicRunestone/"
+  },
+  {
+    "id": "MinionAttackSpeedMagicRunestone",
+    "slug": "MinionAttackSpeedMagicRunestone",
+    "name": "Minion Attack Speed Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncMinionAtkSpd.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionAttackSpeedMagicRunestone/"
+  },
+  {
+    "id": "SentryCriticalRateMagicRunestone",
+    "slug": "SentryCriticalRateMagicRunestone",
+    "name": "Sentry Critical Rate Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncCrossBowAllDmg.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryCriticalRateMagicRunestone/"
+  },
+  {
+    "id": "HPRecoveryMagicRunestone",
+    "slug": "HPRecoveryMagicRunestone",
+    "name": "HP Recovery Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddHPGainOnHit.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/HPRecoveryMagicRunestone/"
+  },
+  {
+    "id": "DMGAmplificationMagicRunestone",
+    "slug": "DMGAmplificationMagicRunestone",
+    "name": "DMG Amplification Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastMorAllDmg.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGAmplificationMagicRunestone/"
+  },
+  {
+    "id": "CriticalDMGMagicRunestone",
+    "slug": "CriticalDMGMagicRunestone",
+    "name": "Critical DMG Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddAllCritDmgRate.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/CriticalDMGMagicRunestone/"
+  },
+  {
+    "id": "MinionHitRateMagicRunestone",
+    "slug": "MinionHitRateMagicRunestone",
+    "name": "Minion Hit Rate Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllAccuracyToMinion.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionHitRateMagicRunestone/"
+  },
+  {
+    "id": "SentryHitRateMagicRunestone",
+    "slug": "SentryHitRateMagicRunestone",
+    "name": "Sentry Hit Rate Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAccuracyToCrossBow.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryHitRateMagicRunestone/"
+  },
+  {
+    "id": "AttackSpeedMagicRunestone",
+    "slug": "AttackSpeedMagicRunestone",
+    "name": "Attack Speed Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAtkSpd.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/AttackSpeedMagicRunestone/"
+  },
+  {
+    "id": "CastSpeedMagicRunestone",
+    "slug": "CastSpeedMagicRunestone",
+    "name": "Cast Speed Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncCastSpd.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/CastSpeedMagicRunestone/"
+  },
+  {
+    "id": "EliteDMGMagicRunestone",
+    "slug": "EliteDMGMagicRunestone",
+    "name": "Elite DMG Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDmgToEliteGrade.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/EliteDMGMagicRunestone/"
+  },
+  {
+    "id": "ArmorPenetrationMagicRunestone",
+    "slug": "ArmorPenetrationMagicRunestone",
+    "name": "Armor Penetration Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddArmourPenRate.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/ArmorPenetrationMagicRunestone/"
+  },
+  {
+    "id": "ElementPenetrationMagicRunestone",
+    "slug": "ElementPenetrationMagicRunestone",
+    "name": "Element Penetration Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastElementalPenRate.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/ElementPenetrationMagicRunestone/"
+  },
+  {
+    "id": "SentryAttackSpeedMagicRunestone",
+    "slug": "SentryAttackSpeedMagicRunestone",
+    "name": "Sentry Attack Speed Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAtkSpdToCrossBow.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryAttackSpeedMagicRunestone/"
+  },
+  {
+    "id": "MinionCriticalRateMagicRunestone",
+    "slug": "MinionCriticalRateMagicRunestone",
+    "name": "Minion Critical Rate Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastCritDmgRateToMinion.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionCriticalRateMagicRunestone/"
+  },
+  {
+    "id": "MinionDMGPenetrationMagicRunestone",
+    "slug": "MinionDMGPenetrationMagicRunestone",
+    "name": "Minion DMG Penetration Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAllDmgPenRateToMinion.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGPenetrationMagicRunestone/"
+  },
+  {
+    "id": "SentryDMGPenetrationMagicRunestone",
+    "slug": "SentryDMGPenetrationMagicRunestone",
+    "name": "Sentry DMG Penetration Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAllDmgPenRateToCrossBow.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGPenetrationMagicRunestone/"
+  },
+  {
+    "id": "AttackSealEffectMagicRunestone",
+    "slug": "AttackSealEffectMagicRunestone",
+    "name": "Attack Seal Effect Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncOffAuraEffect.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/AttackSealEffectMagicRunestone/"
+  },
+  {
+    "id": "DefenseSealEffectMagicRunestone",
+    "slug": "DefenseSealEffectMagicRunestone",
+    "name": "Defense Seal Effect Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDefAuraEffect.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DefenseSealEffectMagicRunestone/"
+  },
+  {
+    "id": "EnchanceSkillRuneCooldownRecoverySpeedMagicRunestone",
+    "slug": "EnchanceSkillRuneCooldownRecoverySpeedMagicRunestone",
+    "name": "Enchance Skill Rune Cooldown Recovery Speed Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastRedCooltimeToBuffSkill.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/EnchanceSkillRuneCooldownRecoverySpeedMagicRunestone/"
+  },
+  {
+    "id": "MinionDMGAgainstElitesMagicRunestone",
+    "slug": "MinionDMGAgainstElitesMagicRunestone",
+    "name": "Minion DMG against Elites Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDmgToEliteGradeToMinion.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGAgainstElitesMagicRunestone/"
+  },
+  {
+    "id": "SentryDMGAgainstElitesMagicRunestone",
+    "slug": "SentryDMGAgainstElitesMagicRunestone",
+    "name": "Sentry DMG against Elites Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDmgToEliteGradeToCrossBow.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGAgainstElitesMagicRunestone/"
+  },
+  {
+    "id": "AttackEnhanceSkillDurationMagicRunestone",
+    "slug": "AttackEnhanceSkillDurationMagicRunestone",
+    "name": "Attack Enhance Skill Duration Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_IncBuffDurationTimeToAttackBuffSkill.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/AttackEnhanceSkillDurationMagicRunestone/"
+  },
+  {
+    "id": "DefenceEnhanceSkillDurationMagicRunestone",
+    "slug": "DefenceEnhanceSkillDurationMagicRunestone",
+    "name": "Defence Enhance Skill Duration Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_IncBuffDurationTimeToDefenseBuffSkill.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DefenceEnhanceSkillDurationMagicRunestone/"
+  },
+  {
+    "id": "DMGStatusEffectChanceMagicRunestone",
+    "slug": "DMGStatusEffectChanceMagicRunestone",
+    "name": "DMG Status Effect Chance Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddDmgAbsProcRate.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGStatusEffectChanceMagicRunestone/"
+  },
+  {
+    "id": "MinionDMGStatusEffectChanceMagicRunestone",
+    "slug": "MinionDMGStatusEffectChanceMagicRunestone",
+    "name": "Minion DMG Status Effect Chance Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddDmgAbsProcRateToCrossbow.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGStatusEffectChanceMagicRunestone/"
+  },
+  {
+    "id": "SentryDMGStatusEffectChanceMagicRunestone",
+    "slug": "SentryDMGStatusEffectChanceMagicRunestone",
+    "name": "Sentry DMG Status Effect Chance Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddDmgAbsProcRateToMinion.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGStatusEffectChanceMagicRunestone/"
+  },
+  {
+    "id": "StatusEffectDMGAmplificationMagicRunestone",
+    "slug": "StatusEffectDMGAmplificationMagicRunestone",
+    "name": "Status Effect DMG Amplification Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_MorDmgAbsDmg.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/StatusEffectDMGAmplificationMagicRunestone/"
+  },
+  {
+    "id": "MinionStatusEffectDMGAmplificationMagicRunestone",
+    "slug": "MinionStatusEffectDMGAmplificationMagicRunestone",
+    "name": "Minion Status Effect DMG Amplification Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_MorDmgAbsDmgToMinion.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionStatusEffectDMGAmplificationMagicRunestone/"
+  },
+  {
+    "id": "SentryStatusEffectDMGAmplificationMagicRunestone",
+    "slug": "SentryStatusEffectDMGAmplificationMagicRunestone",
+    "name": "Sentry Status Effect DMG Amplification Magic Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_MorDmgAbsDmgToCrossbow.png",
+    "rarity": "magic",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryStatusEffectDMGAmplificationMagicRunestone/"
+  },
+  {
+    "id": "HitRateRareRunestone",
+    "slug": "HitRateRareRunestone",
+    "name": "Hit Rate Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAccuracy.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/HitRateRareRunestone/"
+  },
+  {
+    "id": "CriticalRateRareRunestone",
+    "slug": "CriticalRateRareRunestone",
+    "name": "Critical Rate Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllCritProc.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/CriticalRateRareRunestone/"
+  },
+  {
+    "id": "DMGRareRunestone",
+    "slug": "DMGRareRunestone",
+    "name": "DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmg.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGRareRunestone/"
+  },
+  {
+    "id": "MinionDMGRareRunestone",
+    "slug": "MinionDMGRareRunestone",
+    "name": "Minion DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncMinionAllDmg.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGRareRunestone/"
+  },
+  {
+    "id": "SentryDMGRareRunestone",
+    "slug": "SentryDMGRareRunestone",
+    "name": "Sentry DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncCrossBowAllDmg.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGRareRunestone/"
+  },
+  {
+    "id": "ManaRecoveryRareRunestone",
+    "slug": "ManaRecoveryRareRunestone",
+    "name": "Mana Recovery Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddMPGainOnHit.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/ManaRecoveryRareRunestone/"
+  },
+  {
+    "id": "BossDMGRareRunestone",
+    "slug": "BossDMGRareRunestone",
+    "name": "Boss DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgToBoss.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/BossDMGRareRunestone/"
+  },
+  {
+    "id": "CriticalDMGRareRunestone",
+    "slug": "CriticalDMGRareRunestone",
+    "name": "Critical DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddAllCritDmgRate.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/CriticalDMGRareRunestone/"
+  },
+  {
+    "id": "MinionCriticalDMGRareRunestone",
+    "slug": "MinionCriticalDMGRareRunestone",
+    "name": "Minion Critical DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastCritDmgRateToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionCriticalDMGRareRunestone/"
+  },
+  {
+    "id": "SentryCriticalDMGRareRunestone",
+    "slug": "SentryCriticalDMGRareRunestone",
+    "name": "Sentry Critical DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastCritDmgRateToCrossBow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryCriticalDMGRareRunestone/"
+  },
+  {
+    "id": "AttackEnhanceEffectRareRunestone",
+    "slug": "AttackEnhanceEffectRareRunestone",
+    "name": "Attack Enhance Effect Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAttackBuffSkill.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/AttackEnhanceEffectRareRunestone/"
+  },
+  {
+    "id": "DefenseEnhanceEffectRareRunestone",
+    "slug": "DefenseEnhanceEffectRareRunestone",
+    "name": "Defense Enhance Effect Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDefenseBuffSkill.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DefenseEnhanceEffectRareRunestone/"
+  },
+  {
+    "id": "DMGAgainstNearEnemiesRareRunestone",
+    "slug": "DMGAgainstNearEnemiesRareRunestone",
+    "name": "DMG against near enemies Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDmgDistance400Below.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGAgainstNearEnemiesRareRunestone/"
+  },
+  {
+    "id": "DMGAgainstFarEnemiesRareRunestone",
+    "slug": "DMGAgainstFarEnemiesRareRunestone",
+    "name": "DMG against far enemies Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDmgDistance400Over.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGAgainstFarEnemiesRareRunestone/"
+  },
+  {
+    "id": "MinionHitRateRareRunestone",
+    "slug": "MinionHitRateRareRunestone",
+    "name": "Minion Hit Rate Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllAccuracyToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionHitRateRareRunestone/"
+  },
+  {
+    "id": "SentryHitRateRareRunestone",
+    "slug": "SentryHitRateRareRunestone",
+    "name": "Sentry Hit Rate Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAccuracyToCrossBow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryHitRateRareRunestone/"
+  },
+  {
+    "id": "MinionDMGOnHitAgainstFarEnemiesRareRunestone",
+    "slug": "MinionDMGOnHitAgainstFarEnemiesRareRunestone",
+    "name": "Minion DMG on hit against far enemies Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgWhenDistance400OverToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGOnHitAgainstFarEnemiesRareRunestone/"
+  },
+  {
+    "id": "SentryDMGOnHitAgainstFarEnemiesRareRunestone",
+    "slug": "SentryDMGOnHitAgainstFarEnemiesRareRunestone",
+    "name": "Sentry DMG on hit against far enemies Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgWhenDistance400OverToCrossBow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGOnHitAgainstFarEnemiesRareRunestone/"
+  },
+  {
+    "id": "DoubleMaximizedDMGChanceRareRunestone",
+    "slug": "DoubleMaximizedDMGChanceRareRunestone",
+    "name": "Double Maximized DMG Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastDoubleDamageProc.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DoubleMaximizedDMGChanceRareRunestone/"
+  },
+  {
+    "id": "MinionDoubleMaximizedDMGChanceRareRunestone",
+    "slug": "MinionDoubleMaximizedDMGChanceRareRunestone",
+    "name": "Minion Double Maximized DMG Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastDoubleDamageProcToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDoubleMaximizedDMGChanceRareRunestone/"
+  },
+  {
+    "id": "SentryDoubleMaximizedDMGChanceRareRunestone",
+    "slug": "SentryDoubleMaximizedDMGChanceRareRunestone",
+    "name": "Sentry Double Maximized DMG Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastDoubleDamageProcToCrossBow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDoubleMaximizedDMGChanceRareRunestone/"
+  },
+  {
+    "id": "TripleMaximizedDMGChanceRareRunestone",
+    "slug": "TripleMaximizedDMGChanceRareRunestone",
+    "name": "Triple Maximized DMG Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastTrippleDamageProc.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/TripleMaximizedDMGChanceRareRunestone/"
+  },
+  {
+    "id": "MinionTripleMaximizedDMGChanceRareRunestone",
+    "slug": "MinionTripleMaximizedDMGChanceRareRunestone",
+    "name": "Minion Triple Maximized DMG Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastTrippleDamageProcToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionTripleMaximizedDMGChanceRareRunestone/"
+  },
+  {
+    "id": "SentryTripleMaximizedDMGChanceRareRunestone",
+    "slug": "SentryTripleMaximizedDMGChanceRareRunestone",
+    "name": "Sentry Triple Maximized DMG Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastTrippleDamageProcToCrossBow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryTripleMaximizedDMGChanceRareRunestone/"
+  },
+  {
+    "id": "ElementPenetrationRareRunestone",
+    "slug": "ElementPenetrationRareRunestone",
+    "name": "Element Penetration Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddElePen.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/ElementPenetrationRareRunestone/"
+  },
+  {
+    "id": "SentryElementPenetrationRareRunestone",
+    "slug": "SentryElementPenetrationRareRunestone",
+    "name": "Sentry Element Penetration Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddElePenToCrossBow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryElementPenetrationRareRunestone/"
+  },
+  {
+    "id": "MinionElementPenetrationRareRunestone",
+    "slug": "MinionElementPenetrationRareRunestone",
+    "name": "Minion Element Penetration Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddElePenToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionElementPenetrationRareRunestone/"
+  },
+  {
+    "id": "DMGStatusEffectChanceRareRunestone",
+    "slug": "DMGStatusEffectChanceRareRunestone",
+    "name": "DMG Status Effect Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddDmgAbsProcRate.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGStatusEffectChanceRareRunestone/"
+  },
+  {
+    "id": "SentryDMGStatusEffectChanceRareRunestone",
+    "slug": "SentryDMGStatusEffectChanceRareRunestone",
+    "name": "Sentry DMG Status Effect Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddDmgAbsProcRateToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGStatusEffectChanceRareRunestone/"
+  },
+  {
+    "id": "MiinionDMGStatusEffectChanceRareRunestone",
+    "slug": "MiinionDMGStatusEffectChanceRareRunestone",
+    "name": "Miinion DMG Status Effect Chance Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_AddDmgAbsProcRateToCrossbow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MiinionDMGStatusEffectChanceRareRunestone/"
+  },
+  {
+    "id": "DoubleMaximizedDMGRareRunestone",
+    "slug": "DoubleMaximizedDMGRareRunestone",
+    "name": "Double Maximized DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_DoubleDMGApplyRate.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DoubleMaximizedDMGRareRunestone/"
+  },
+  {
+    "id": "MinionDoubleMaximizedDMGRareRunestone",
+    "slug": "MinionDoubleMaximizedDMGRareRunestone",
+    "name": "Minion Double Maximized DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_DoubleDMGApplyRateToMinion.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDoubleMaximizedDMGRareRunestone/"
+  },
+  {
+    "id": "SentryDoubleMaximizedDMGRareRunestone",
+    "slug": "SentryDoubleMaximizedDMGRareRunestone",
+    "name": "Sentry Double Maximized DMG Rare Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_DoubleDMGApplyRateToCrossbow.png",
+    "rarity": "rare",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDoubleMaximizedDMGRareRunestone/"
+  },
+  {
+    "id": "RuneGrowthUniqueRunestone",
+    "slug": "RuneGrowthUniqueRunestone",
+    "name": "Rune Growth Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddEquipRuneLevel.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/RuneGrowthUniqueRunestone/"
+  },
+  {
+    "id": "ResourceCostUniqueRunestone",
+    "slug": "ResourceCostUniqueRunestone",
+    "name": "Resource Cost Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddResource.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/ResourceCostUniqueRunestone/"
+  },
+  {
+    "id": "HitRateUniqueRunestone",
+    "slug": "HitRateUniqueRunestone",
+    "name": "Hit Rate Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAccuracy.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/HitRateUniqueRunestone/"
+  },
+  {
+    "id": "BossDMGUniqueRunestone",
+    "slug": "BossDMGUniqueRunestone",
+    "name": "Boss DMG Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgToBoss.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/BossDMGUniqueRunestone/"
+  },
+  {
+    "id": "DMGUniqueRunestone",
+    "slug": "DMGUniqueRunestone",
+    "name": "DMG Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmg.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGUniqueRunestone/"
+  },
+  {
+    "id": "DMGAmplificationUniqueRunestone",
+    "slug": "DMGAmplificationUniqueRunestone",
+    "name": "DMG Amplification Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastMorAllDmg.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGAmplificationUniqueRunestone/"
+  },
+  {
+    "id": "CriticalRateUniqueRunestone",
+    "slug": "CriticalRateUniqueRunestone",
+    "name": "Critical Rate Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllCritProc.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/CriticalRateUniqueRunestone/"
+  },
+  {
+    "id": "CriticalDMGUniqueRunestone",
+    "slug": "CriticalDMGUniqueRunestone",
+    "name": "Critical DMG Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddAllCritDmgRate.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/CriticalDMGUniqueRunestone/"
+  },
+  {
+    "id": "HPRecoveryUniqueRunestone",
+    "slug": "HPRecoveryUniqueRunestone",
+    "name": "HP Recovery Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAddHPGainOnHit.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/HPRecoveryUniqueRunestone/"
+  },
+  {
+    "id": "MinionDMGUniqueRunestone",
+    "slug": "MinionDMGUniqueRunestone",
+    "name": "Minion DMG Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncMinionAllDmg.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGUniqueRunestone/"
+  },
+  {
+    "id": "SentryDMGUniqueRunestone",
+    "slug": "SentryDMGUniqueRunestone",
+    "name": "Sentry DMG Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncCrossBowAllDmg.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGUniqueRunestone/"
+  },
+  {
+    "id": "MinionDMGAtFullMinionHPUniqueRunestone",
+    "slug": "MinionDMGAtFullMinionHPUniqueRunestone",
+    "name": "Minion DMG at Full Minion HP Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgWhenMaxHPToMinion.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGAtFullMinionHPUniqueRunestone/"
+  },
+  {
+    "id": "SentryDMGAtFullSentryHPUniqueRunestone",
+    "slug": "SentryDMGAtFullSentryHPUniqueRunestone",
+    "name": "Sentry DMG at Full Sentry HP Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgWhenMaxHPToCrossBow.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGAtFullSentryHPUniqueRunestone/"
+  },
+  {
+    "id": "DMGAtFullHPUniqueRunestone",
+    "slug": "DMGAtFullHPUniqueRunestone",
+    "name": "DMG at Full HP Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncAllDmgWhenMaxHP.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGAtFullHPUniqueRunestone/"
+  },
+  {
+    "id": "DMGPenetrationUniqueRunestone",
+    "slug": "DMGPenetrationUniqueRunestone",
+    "name": "DMG Penetration Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAllDmgPenRate.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DMGPenetrationUniqueRunestone/"
+  },
+  {
+    "id": "MinionDMGPenetrationUniqueRunestone",
+    "slug": "MinionDMGPenetrationUniqueRunestone",
+    "name": "Minion DMG Penetration Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAllDmgPenRateToMinion.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDMGPenetrationUniqueRunestone/"
+  },
+  {
+    "id": "SentryDMGPenetrationUniqueRunestone",
+    "slug": "SentryDMGPenetrationUniqueRunestone",
+    "name": "Sentry DMG Penetration Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastAllDmgPenRateToCrossBow.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDMGPenetrationUniqueRunestone/"
+  },
+  {
+    "id": "AttackSealEffectUniqueRunestone",
+    "slug": "AttackSealEffectUniqueRunestone",
+    "name": "Attack Seal Effect Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncOffAuraEffect.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/AttackSealEffectUniqueRunestone/"
+  },
+  {
+    "id": "DefenseSealEffectUniqueRunestone",
+    "slug": "DefenseSealEffectUniqueRunestone",
+    "name": "Defense Seal Effect Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_RuneCastIncDefAuraEffect.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DefenseSealEffectUniqueRunestone/"
+  },
+  {
+    "id": "DoubleMaximizedDMGUniqueRunestone",
+    "slug": "DoubleMaximizedDMGUniqueRunestone",
+    "name": "Double Maximized DMG Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_DoubleDMGApplyRate.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/DoubleMaximizedDMGUniqueRunestone/"
+  },
+  {
+    "id": "MinionDoubleMaximizedUniqueRunestone",
+    "slug": "MinionDoubleMaximizedUniqueRunestone",
+    "name": "Minion Double Maximized Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_DoubleDMGApplyRateToMinion.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionDoubleMaximizedUniqueRunestone/"
+  },
+  {
+    "id": "SentryDoubleMaximizedUniqueRunestone",
+    "slug": "SentryDoubleMaximizedUniqueRunestone",
+    "name": "Sentry Double Maximized Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_DoubleDMGApplyRateToCrossbow.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryDoubleMaximizedUniqueRunestone/"
+  },
+  {
+    "id": "StatusEffectDMGAmplificationUniqueRunestone",
+    "slug": "StatusEffectDMGAmplificationUniqueRunestone",
+    "name": "Status Effect DMG Amplification Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_MorDmgAbsDmg.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/StatusEffectDMGAmplificationUniqueRunestone/"
+  },
+  {
+    "id": "MinionStatusEffectDMGAmplificationUniqueRunestone",
+    "slug": "MinionStatusEffectDMGAmplificationUniqueRunestone",
+    "name": "Minion Status Effect DMG Amplification Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_MorDmgAbsDmgToMinion.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/MinionStatusEffectDMGAmplificationUniqueRunestone/"
+  },
+  {
+    "id": "SentryStatusEffectDMGAmplificationUniqueRunestone",
+    "slug": "SentryStatusEffectDMGAmplificationUniqueRunestone",
+    "name": "Sentry Status Effect DMG Amplification Unique Runestone",
+    "icon": "/image/items/RuneCast/Icon_Equipment_MorDmgAbsDmgToCrossbow.png",
+    "rarity": "unique",
+    "dbUrl": "https://undecember.thein.ru/en/runecast/SentryStatusEffectDMGAmplificationUniqueRunestone/"
+  }
+]

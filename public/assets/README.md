@@ -1,10 +1,9 @@
 # Ikony
 
-Nazwa pliku = `id` z `src/data/game.js`, format PNG (najlepiej kwadrat, przezroczyste tło).
+Domyślnie ikony są ładowane na żywo z undecember.thein.ru (pole `icon` w `src/data/game.js`).
+Ten folder to zapas: jeśli zdalna ikona się nie załaduje, używany jest plik
 
-- `skills/<id>.png`  np. `skills/s1.png`
-- `links/<id>.png`   np. `links/multishot.png`
+- `skills/<id>.png`
+- `links/<id>.png`
 
-Brak pliku nie psuje strony: socket pokazuje wtedy literę zastępczą.
-Pamiętaj, że grafiki z gry należą do wydawcy. Trzymaj je w tym jednym folderze,
-żeby dało się je łatwo podmienić albo usunąć.
+gdzie `<id>` to id z `game.js`. Brak obu = litera zastępcza.
