@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useMemo, useEffect } from 'react'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
 import RuneBoard from '../components/RuneBoard'
 import RuneInventory from '../components/RuneInventory'
@@ -7,15 +7,18 @@ import RuneInspector from '../components/RuneInspector'
 import SkillHotbar from '../components/SkillHotbar'
 import Socket from '../components/Socket'
 import {
-  CLASSES, UNIQUES, RUNESTONES, GEAR_SLOTS, LINKS,
+  CLASSES, UNIQUES, RUNESTONES, GEAR_SLOTS, LINKS, SKILLS,
   find, createDefaultBoard, calculateBoardLinks, syncBoardToLegacySlots,
   getNeighborCoord, emptyEquipment,
 } from '../data/game'
+import { PRESET_BUILDS, getPresetBuild } from '../data/presetBuilds.js'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
 
 export default function Builder() {
   const nav = useNavigate()
+  const location = useLocation()
+  const [searchParams] = useSearchParams()
   const { user, openAuthModal } = useAuth()
   const [b, setB] = useState({
     title: '',
@@ -29,9 +32,46 @@ export default function Builder() {
   const [selectedCell, setSelectedCell] = useState(null)
   const [selectedRune, setSelectedRune] = useState(null)
   const [pick, setPick] = useState(null) // gear or runestone picker modal
+  const [showPresetModal, setShowPresetModal] = useState(false)
   const [search, setSearch] = useState('')
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
+
+  // Wczytywanie buildu przekazanego w nawigacji lub przez parametr URL
+  useEffect(() => {
+    if (location.state?.loadBuild) {
+      const lb = location.state.loadBuild
+      setB({
+        title: lb.title || '',
+        description: lb.description || '',
+        cls: lb.class || CLASSES[0].id,
+        board: lb.data?.board ? JSON.parse(JSON.stringify(lb.data.board)) : createDefaultBoard(5, 6),
+        equipment: lb.data?.equipment ? JSON.parse(JSON.stringify(lb.data.equipment)) : emptyEquipment(),
+      })
+      setSelectedCell(null)
+      return
+    }
+
+    const presetId = searchParams.get('preset')
+    if (presetId) {
+      const p = getPresetBuild(presetId)
+      if (p) {
+        loadPreset(p)
+      }
+    }
+  }, [location.state, searchParams])
+
+  const loadPreset = (preset) => {
+    setB({
+      title: preset.title,
+      description: preset.description,
+      cls: preset.class,
+      board: JSON.parse(JSON.stringify(preset.data.board)),
+      equipment: JSON.parse(JSON.stringify(preset.data.equipment)),
+    })
+    setSelectedCell(null)
+    setShowPresetModal(false)
+  }
 
   // Calculate board links dynamically
   const { links, skillsSummary, cellLinkStatus } = useMemo(() => {
@@ -203,6 +243,15 @@ export default function Builder() {
           placeholder="Nazwa buildu (np. Whirlwind Berserker)"
           className="w-full border-b border-edge bg-transparent pb-2 font-display text-3xl font-bold outline-none focus:border-gold sm:text-4xl text-white placeholder-mist/40"
         />
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setShowPresetModal(true)}
+            className="flex items-center gap-2 rounded-full border border-gold/60 bg-gold/10 px-4 py-2 font-display text-xs font-bold text-gold transition-colors hover:border-gold hover:bg-gold/20 cursor-pointer shadow-sm"
+          >
+            <span>✨ Wzorce Meta</span>
+          </button>
+        </div>
       </div>
 
       {/* Class selector */}
@@ -598,19 +647,112 @@ export default function Builder() {
                         updateGear(pick.slotKey, null)
                         setPick(null)
                       }}
-                      className="rounded-lg border border-red-500/30 px-4 py-1.5 text-xs text-red-400 hover:bg-red-500/10"
+                      className="rounded-lg border border-red-500/30 px-4 py-1.5 text-xs text-red-400 hover:bg-red-500/10 cursor-pointer"
                     >
                       Usuń Runestone
                     </button>
                     <button
                       onClick={() => setPick(null)}
-                      className="rounded-lg border border-edge px-4 py-1.5 text-xs text-mist hover:text-white"
+                      className="rounded-lg border border-edge px-4 py-1.5 text-xs text-mist hover:text-white cursor-pointer"
                     >
                       Anuluj
                     </button>
                   </div>
                 </>
               )}
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* Preset Builds Modal */}
+        {showPresetModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4 backdrop-blur-sm"
+            onClick={() => setShowPresetModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="flex max-h-[85vh] w-full max-w-3xl flex-col rounded-2xl border border-edge bg-panel shadow-2xl overflow-hidden"
+            >
+              <div className="flex items-center justify-between border-b border-edge/80 p-4 sm:p-5">
+                <div>
+                  <h3 className="font-display text-xl font-bold text-white">
+                    Wybierz Wzorcowy Szablon Buildu (Meta)
+                  </h3>
+                  <p className="text-xs text-mist">
+                    Wczytaj sprawdzony build z kompletną, zoptymalizowaną planszą Runów i unikalnym ekwipunkiem
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPresetModal(false)}
+                  className="rounded-lg p-2 text-mist hover:bg-ink/50 hover:text-white cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
+                {PRESET_BUILDS.map((preset) => {
+                  const c = find(CLASSES, preset.class)
+                  const firstSkillId =
+                    preset.data?.board?.cells?.find((cell) => cell.kind === 'skill' && cell.runeId)?.runeId
+                  const mainSkill = firstSkillId ? find(SKILLS, firstSkillId) : null
+
+                  return (
+                    <div
+                      key={preset.id}
+                      className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl border border-edge/70 bg-ink/40 p-4 transition-all hover:border-gold hover:bg-ink/70"
+                    >
+                      <div className="flex items-start gap-3.5">
+                        {mainSkill && <Socket item={mainSkill} kind="skills" size={54} />}
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-display text-base font-bold text-white group-hover:text-gold transition-colors">
+                              {preset.title}
+                            </span>
+                            <span className="rounded-full border border-gold/40 bg-gold/15 px-2 py-0.5 text-[10px] font-bold text-gold">
+                              {preset.badge}
+                            </span>
+                          </div>
+                          <p className="mt-0.5 text-xs font-semibold" style={{ color: c?.color }}>
+                            {c?.name} • <span className="text-mist font-normal">Trudność: {preset.difficulty}</span>
+                          </p>
+                          <p className="mt-1 line-clamp-2 text-xs text-mist/80">
+                            {preset.description}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex shrink-0 items-center gap-2 self-end sm:self-center">
+                        <button
+                          type="button"
+                          onClick={() => loadPreset(preset)}
+                          className="rounded-full bg-gold px-4 py-2 text-xs font-bold text-ink transition-colors hover:bg-gold-hover cursor-pointer shadow"
+                        >
+                          Wczytaj ⚔
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+
+              <div className="flex justify-end border-t border-edge/80 p-4">
+                <button
+                  type="button"
+                  onClick={() => setShowPresetModal(false)}
+                  className="rounded-lg border border-edge px-4 py-1.5 text-xs text-mist hover:text-white cursor-pointer"
+                >
+                  Zamknij
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

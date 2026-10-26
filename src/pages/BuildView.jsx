@@ -1,17 +1,28 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import BuildSheet from '../components/BuildSheet'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../context/AuthContext'
+import { getPresetBuild } from '../data/presetBuilds.js'
 
 export default function BuildView() {
   const { id } = useParams()
+  const nav = useNavigate()
   const { user } = useAuth()
   const [build, setBuild] = useState(null)
   const [state, setState] = useState('loading')
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
+    if (id?.startsWith('preset-')) {
+      const preset = getPresetBuild(id)
+      if (preset) {
+        setBuild(preset)
+        setState('ok')
+        return
+      }
+    }
+
     supabase
       .from('builds')
       .select('*')
@@ -28,6 +39,11 @@ export default function BuildView() {
     await navigator.clipboard.writeText(location.href)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const customizeInBuilder = () => {
+    if (!build) return
+    nav('/', { state: { loadBuild: build } })
   }
 
   if (state === 'loading') {
@@ -68,12 +84,18 @@ export default function BuildView() {
             </span>
           )}
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={customizeInBuilder}
+            className="flex items-center gap-1.5 rounded-full bg-gold px-5 py-2 text-xs font-bold text-ink transition-colors hover:bg-gold-hover cursor-pointer"
+          >
+            <span>⚔ Dostosuj w Kreatorze</span>
+          </button>
           <button
             onClick={copy}
-            className="flex items-center gap-1.5 rounded-full border border-gold/60 bg-gold/10 px-5 py-2 text-xs font-bold text-gold transition-colors hover:border-gold hover:bg-gold/20"
+            className="flex items-center gap-1.5 rounded-full border border-gold/60 bg-gold/10 px-5 py-2 text-xs font-bold text-gold transition-colors hover:border-gold hover:bg-gold/20 cursor-pointer"
           >
-            <span>{copied ? '✓ Skopiowano link do schowka!' : 'Kopiuj link do buildu'}</span>
+            <span>{copied ? '✓ Skopiowano link!' : 'Kopiuj link do buildu'}</span>
           </button>
           <Link
             to="/"
