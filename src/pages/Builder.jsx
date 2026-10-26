@@ -12,9 +12,11 @@ import {
   getNeighborCoord, emptyEquipment,
 } from '../data/game'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../context/AuthContext'
 
 export default function Builder() {
   const nav = useNavigate()
+  const { user, openAuthModal } = useAuth()
   const [b, setB] = useState({
     title: '',
     description: '',
@@ -72,6 +74,12 @@ export default function Builder() {
 
   // Save build to Supabase
   const save = async () => {
+    if (!user) {
+      setErr('Musisz być zalogowany, aby zapisać build w bazie.')
+      openAuthModal()
+      return
+    }
+
     if (!b.title.trim()) return setErr('Wpisz nazwę buildu.')
     setBusy(true)
     setErr('')
@@ -81,6 +89,7 @@ export default function Builder() {
     const { data, error } = await supabase
       .from('builds')
       .insert({
+        user_id: user.id,
         title: b.title.trim(),
         description: b.description.trim(),
         class: b.cls,
@@ -378,18 +387,24 @@ export default function Builder() {
 
         {err && <p role="alert" className="mt-3 text-sm font-medium text-red-400">{err}</p>}
 
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-mist">
-            Zapisany build otrzyma unikalny link, którym możesz dzielić się z innymi graczami.
+            {user
+              ? `Twój build zostanie przypisany do Twojego konta (${user.email}).`
+              : 'Wymagane logowanie do zapisu buildu. Zaloguj się lub utwórz konto, aby kontynuować.'}
           </p>
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            onClick={save}
+            onClick={user ? save : openAuthModal}
             disabled={busy}
-            className="rounded-full bg-gold px-8 py-3 font-display font-bold text-ink shadow-lg shadow-gold/20 transition-all hover:bg-gold-hover disabled:opacity-50 cursor-pointer"
+            className="rounded-full bg-gold px-8 py-3 font-display font-bold text-ink shadow-lg shadow-gold/20 transition-all hover:bg-gold-hover disabled:opacity-50 cursor-pointer text-center whitespace-nowrap"
           >
-            {busy ? 'Zapisywanie w bazie…' : 'Zapisz build'}
+            {busy
+              ? 'Zapisywanie w bazie…'
+              : user
+              ? 'Zapisz build'
+              : 'Zaloguj się i zapisz'}
           </motion.button>
         </div>
       </div>

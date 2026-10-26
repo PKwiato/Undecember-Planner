@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import BuildSheet from '../components/BuildSheet'
 import { supabase } from '../lib/supabase'
+import { useAuth } from '../context/AuthContext'
 
 export default function BuildView() {
   const { id } = useParams()
+  const { user } = useAuth()
   const [build, setBuild] = useState(null)
   const [state, setState] = useState('loading')
   const [copied, setCopied] = useState(false)
@@ -51,12 +53,21 @@ export default function BuildView() {
     )
   }
 
+  const isMine = user && build?.user_id === user.id
+
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <Link to="/builds" className="text-xs text-mist hover:text-white">
-          ← Wróć do listy buildów
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link to="/builds" className="text-xs text-mist hover:text-white">
+            ← Wróć do listy buildów
+          </Link>
+          {isMine && (
+            <span className="rounded-full border border-gold/40 bg-gold/15 px-3 py-0.5 text-xs font-semibold text-gold">
+              Twój autorski build
+            </span>
+          )}
+        </div>
         <div className="flex gap-2">
           <button
             onClick={copy}
