@@ -9213,7 +9213,6 @@
       "Overheat"
     ],
     "requires": [
-      "Overheat",
       "Trap"
     ],
     "cannot": [],
@@ -9264,7 +9263,6 @@
       "Trap"
     ],
     "requires": [
-      "Trap",
       "Overheat"
     ],
     "cannot": [],
@@ -11239,9 +11237,7 @@
     "tags": [
       "Movement"
     ],
-    "requires": [
-      "Movement"
-    ],
+    "requires": [],
     "cannot": [
       "Movement"
     ],

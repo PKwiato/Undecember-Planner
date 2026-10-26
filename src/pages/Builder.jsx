@@ -286,7 +286,9 @@ export default function Builder() {
                   onMaxWhiteSlots={handleMaxWhiteSlots}
                   onAutoAlignSlots={handleAutoAlignSlots}
                   connectedLinks={activeSummary?.connectedLinks || []}
+                  blockedLinks={activeSummary?.blockedLinks || []}
                   linkedSkills={activeLinkStatus?.linkedSkills || []}
+                  blockedSkills={activeLinkStatus?.blockedSkills || []}
                 />
               )}
             </AnimatePresence>

@@ -80,6 +80,133 @@ export function find(list, id) {
   return list.find((x) => x.id === target || x.slug === target || x.code === target || x.id === id || x.slug === id)
 }
 
+// Parser i reguły walidacji kompatybilności Link Runów ze skillami
+const LINK_RULES_CACHE = new Map()
+
+export function getLinkValidationRules(link) {
+  if (!link) return { type: 'standard', andTags: [], orGroups: [], cannot: [] }
+  const cacheKey = link.id || link.slug || link.name
+  if (LINK_RULES_CACHE.has(cacheKey)) {
+    return LINK_RULES_CACHE.get(cacheKey)
+  }
+
+  const desc = link.desc || ''
+  const name = link.name || ''
+  const id = link.id || link.slug || ''
+  const rawReq = link.requires || []
+  const cannot = (link.cannot || []).filter(Boolean)
+
+  // Wyjątki / specyficzne przypadki:
+  if (id === 'ReverseTime' || name === 'Reverse Time') {
+    const rules = { type: 'standard', andTags: [], orGroups: [], cannot: ['Movement'] }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+  if (id === 'Outlaw' || name === 'Outlaw') {
+    const rules = { type: 'standard', andTags: ['Trap'], orGroups: [], cannot }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+  if (id === 'LastingTrap' || name === 'Lasting Trap') {
+    const rules = { type: 'standard', andTags: ['Overheat'], orGroups: [], cannot }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+  if (id === 'TimeWarp' || name === 'Time Warp') {
+    const rules = {
+      type: 'standard',
+      andTags: [],
+      orGroups: [['Attack', 'Spell']],
+      cannot: ['Channel', 'Totem', 'Sentry', 'Minion', 'Movement'],
+    }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+  if (id === 'UseCount' || name === 'Use Count') {
+    const rules = { type: 'standard', andTags: [], orGroups: [], cannot }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+
+  // Runy Wyzwalające (Trigger Runes - łączące skill aktywujący ze skillem docelowym)
+  const isTrigger = Boolean(link.tags?.includes('Trigger') || name.toLowerCase().includes('activation'))
+  if (isTrigger) {
+    let act = []
+    let target = []
+    let targetCannot = ['Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle', 'Trap']
+
+    if (name === 'Spell Activation on Attack Hit') {
+      act = ['Attack', 'Strike']
+      target = ['Spell']
+      targetCannot = ['Attack', 'Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle', 'Trap']
+    } else if (name === 'Spell Activation on Spell Hit') {
+      act = ['Spell', 'Strike']
+      target = ['Spell']
+      targetCannot = ['Attack', 'Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle', 'Trap']
+    } else if (name === 'Spell Activation on Hit') {
+      act = ['Strike']
+      target = ['Spell']
+      targetCannot = [
+        'Attack', 'Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle',
+        'Shout', 'Attack Enhance', 'Defense Enhance', 'Trap',
+      ]
+    } else if (name === 'Spell Activation upon Enemy Kill') {
+      act = ['Strike']
+      target = ['Spell']
+      targetCannot = ['Attack', 'Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle', 'Trap']
+    } else if (name === 'Spell Activation while Channeling') {
+      act = ['Channel']
+      target = ['Spell']
+      targetCannot = ['Attack', 'Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle', 'Trap']
+    } else if (name === 'Buff Activation when Hit' || name === 'Buff Activation upon Crowd Control') {
+      act = []
+      target = ['Shout', 'Attack Enhance', 'Defense Enhance']
+      targetCannot = ['Channel', 'Totem', 'Sentry', 'Minion', 'Movement', 'Toggle', 'Trap']
+    } else if (name === 'Buff Activation upon using Movement Skill') {
+      act = ['Movement']
+      target = ['Shout', 'Attack Enhance', 'Defense Enhance']
+      targetCannot = ['Channel', 'Totem', 'Sentry', 'Minion', 'Toggle']
+    } else if (name === 'Totem Activation upon using Enhance Skill') {
+      act = ['Attack Enhance', 'Defense Enhance']
+      target = ['Totem']
+      targetCannot = ['Channel', 'Sentry', 'Minion', 'Movement', 'Toggle']
+    }
+
+    const rules = { type: 'trigger', act, target, cannot, targetCannot }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+
+  // Standardowe linki: parsowanie grup alternatywnych (OR)
+  const orGroups = []
+  const andTags = []
+
+  if (desc.includes('any one of')) {
+    if (desc.includes('any one of Strike, DoT')) orGroups.push(['Strike', 'DoT'])
+    if (desc.includes('any one of Attack, Spell')) orGroups.push(['Attack', 'Spell'])
+    if (desc.includes('any one of Fire, Cold, Lightning, Poison')) orGroups.push(['Fire', 'Cold', 'Lightning', 'Poison'])
+    if (desc.includes('any one of Attack Seal, Defense Seal')) orGroups.push(['Attack Seal', 'Defense Seal'])
+    if (desc.includes('any one of Bow, Sentry')) orGroups.push(['Bow', 'Sentry'])
+    if (desc.includes('any one of Shout, Attack Enhance, Defense Enhance, Rapid Seal')) {
+      orGroups.push(['Shout', 'Attack Enhance', 'Defense Enhance', 'Rapid Seal'])
+    }
+
+    const covered = new Set(orGroups.flat().map((t) => t.toLowerCase()))
+    for (const t of rawReq) {
+      if (!covered.has(t.toLowerCase())) {
+        andTags.push(t)
+      }
+    }
+    const rules = { type: 'standard', andTags, orGroups, cannot }
+    LINK_RULES_CACHE.set(cacheKey, rules)
+    return rules
+  }
+
+  const rules = { type: 'standard', andTags: rawReq, orGroups: [], cannot }
+  LINK_RULES_CACHE.set(cacheKey, rules)
+  return rules
+}
+
 // Sprawdza kompatybilność Link Runa ze skillem i kolorem slotu
 export function canLink(skill, slotColor, link) {
   if (!skill) return { ok: false, reason: 'Najpierw wybierz skill' }
@@ -89,9 +216,42 @@ export function canLink(skill, slotColor, link) {
     return { ok: false, reason: `Wymaga slotu ${linkElem} (obecny: ${slotElem})` }
   }
 
+  const rules = getLinkValidationRules(link)
+
+  // Obsługa run wyzwalających (Trigger Runes)
+  if (rules.type === 'trigger') {
+    const actMatches =
+      rules.act.length > 0 &&
+      rules.act.every((t) =>
+        skill.tags?.some((st) => st.toLowerCase() === t.toLowerCase())
+      )
+
+    const targetHasForbidden = rules.targetCannot?.some((t) =>
+      skill.tags?.some((st) => st.toLowerCase() === t.toLowerCase())
+    )
+    const targetMatches =
+      !targetHasForbidden &&
+      rules.target.length > 0 &&
+      rules.target.some((t) =>
+        skill.tags?.some((st) => st.toLowerCase() === t.toLowerCase())
+      )
+
+    if (actMatches || targetMatches) {
+      return { ok: true }
+    }
+
+    const actPart = rules.act.length > 0 ? `aktywującego (${rules.act.join(', ')})` : null
+    const targetPart = rules.target.length > 0 ? `docelowego (${rules.target.join(' / ')})` : null
+    const parts = [actPart, targetPart].filter(Boolean).join(' lub ')
+    return {
+      ok: false,
+      reason: `Wymaga skilla ${parts || 'kompatybilnego z wyzwalaczem'}`,
+    }
+  }
+
   // Sprawdzenie tagów zakazanych (cannot)
-  if (link.cannot && link.cannot.length > 0) {
-    const forbidden = link.cannot.filter((t) =>
+  if (rules.cannot && rules.cannot.length > 0) {
+    const forbidden = rules.cannot.filter((t) =>
       skill.tags?.some((st) => st.toLowerCase() === t.toLowerCase())
     )
     if (forbidden.length > 0) {
@@ -99,13 +259,28 @@ export function canLink(skill, slotColor, link) {
     }
   }
 
-  // Sprawdzenie wymaganych tagów (requires)
-  if (link.requires && link.requires.length > 0) {
-    const missing = link.requires.filter(
+  // Sprawdzenie wymaganych tagów bezwzględnych (AND)
+  if (rules.andTags && rules.andTags.length > 0) {
+    const missing = rules.andTags.filter(
       (t) => !skill.tags?.some((st) => st.toLowerCase() === t.toLowerCase())
     )
     if (missing.length > 0) {
       return { ok: false, reason: `Wymaga tagu: ${missing.join(', ')}` }
+    }
+  }
+
+  // Sprawdzenie grup alternatywnych (OR)
+  if (rules.orGroups && rules.orGroups.length > 0) {
+    for (const group of rules.orGroups) {
+      const matches = group.some((t) =>
+        skill.tags?.some((st) => st.toLowerCase() === t.toLowerCase())
+      )
+      if (!matches) {
+        return {
+          ok: false,
+          reason: `Wymaga co najmniej jednego z tagów: ${group.join(', ')}`,
+        }
+      }
     }
   }
 
@@ -312,6 +487,7 @@ export function calculateBoardLinks(board) {
       if (!skill) continue
 
       const connectedLinks = []
+      const blockedLinks = []
       const skillSlots = cell.slots || ['red', 'red', 'red', 'red', 'red', 'red']
 
       for (let dir = 0; dir < 6; dir++) {
@@ -350,8 +526,26 @@ export function calculateBoardLinks(board) {
           links.push(linkItem)
           connectedLinks.push({ link: linkRune, slotColor, cellId: neighbor.id, dir })
 
-          if (!cellLinkStatus[neighbor.id]) cellLinkStatus[neighbor.id] = { linkedSkills: [] }
-          cellLinkStatus[neighbor.id].linkedSkills.push({ skill, slotColor, fromCellId: cell.id })
+          if (!cellLinkStatus[neighbor.id]) cellLinkStatus[neighbor.id] = { linkedSkills: [], blockedSkills: [] }
+          if (!cellLinkStatus[neighbor.id].linkedSkills) cellLinkStatus[neighbor.id].linkedSkills = []
+          cellLinkStatus[neighbor.id].linkedSkills.push({ skill, slotColor, fromCellId: cell.id, dir })
+        } else {
+          blockedLinks.push({
+            link: linkRune,
+            slotColor,
+            cellId: neighbor.id,
+            dir,
+            reason: check.reason,
+          })
+          if (!cellLinkStatus[neighbor.id]) cellLinkStatus[neighbor.id] = { linkedSkills: [], blockedSkills: [] }
+          if (!cellLinkStatus[neighbor.id].blockedSkills) cellLinkStatus[neighbor.id].blockedSkills = []
+          cellLinkStatus[neighbor.id].blockedSkills.push({
+            skill,
+            slotColor,
+            fromCellId: cell.id,
+            dir,
+            reason: check.reason,
+          })
         }
       }
 
@@ -360,6 +554,7 @@ export function calculateBoardLinks(board) {
         cell,
         skill,
         connectedLinks,
+        blockedLinks,
         activeLinksCount: connectedLinks.length,
       })
     }
